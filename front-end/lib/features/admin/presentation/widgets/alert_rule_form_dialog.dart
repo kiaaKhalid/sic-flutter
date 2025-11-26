@@ -58,136 +58,144 @@ class _AlertRuleFormDialogState extends State<AlertRuleFormDialog> {
   @override
   Widget build(BuildContext context) {
     final isEdit = widget.rule != null;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Dialog(
       backgroundColor: AppTheme.card,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppTheme.borderRadiusL)),
-      child: SizedBox(
+      child: Container(
         width: 550,
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  isEdit ? 'Modifier la Règle' : 'Nouvelle Règle d\'Alerte',
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: _nameController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    labelText: 'Nom de la règle *',
-                    prefixIcon: Icon(Icons.title),
-                    hintText: 'Ex: Tachycardie sévère',
+        constraints: BoxConstraints(
+          maxHeight: screenHeight * 0.85,
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isEdit ? 'Modifier la Règle' : 'Nouvelle Règle d\'Alerte',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold),
                   ),
-                  validator: (v) => v == null || v.isEmpty ? 'Requis' : null,
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<ParameterType>(
-                  value: _parameterType,
-                  dropdownColor: AppTheme.card,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    labelText: 'Type de paramètre *',
-                    prefixIcon: Icon(Icons.category),
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    controller: _nameController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      labelText: 'Nom de la règle *',
+                      prefixIcon: Icon(Icons.title),
+                      hintText: 'Ex: Tachycardie sévère',
+                    ),
+                    validator: (v) => v == null || v.isEmpty ? 'Requis' : null,
                   ),
-                  items: ParameterType.values
-                      .map((type) => DropdownMenuItem(
-                            value: type,
-                            child: Row(
-                              children: [
-                                Icon(type.icon, color: type.color, size: 20),
-                                const SizedBox(width: 8),
-                                Text(type.displayName),
-                              ],
-                            ),
-                          ))
-                      .toList(),
-                  onChanged: (v) => setState(() => _parameterType = v!),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _conditionController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    labelText: 'Définition de la condition *',
-                    prefixIcon: Icon(Icons.rule),
-                    hintText: 'Ex: BPM > 130 pendant 5 minutes consécutives',
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<ParameterType>(
+                    value: _parameterType,
+                    dropdownColor: AppTheme.card,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      labelText: 'Type de paramètre *',
+                      prefixIcon: Icon(Icons.category),
+                    ),
+                    items: ParameterType.values
+                        .map((type) => DropdownMenuItem(
+                              value: type,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(type.icon, color: type.color, size: 20),
+                                  const SizedBox(width: 8),
+                                  Text(type.displayName),
+                                ],
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (v) => setState(() => _parameterType = v!),
                   ),
-                  maxLines: 3,
-                  validator: (v) => v == null || v.isEmpty ? 'Requis' : null,
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<AlertPriority>(
-                  value: _priority,
-                  dropdownColor: AppTheme.card,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    labelText: 'Priorité résultante *',
-                    prefixIcon: Icon(Icons.priority_high),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _conditionController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      labelText: 'Définition de la condition *',
+                      prefixIcon: Icon(Icons.rule),
+                      hintText: 'Ex: BPM > 130 pendant 5 minutes consécutives',
+                    ),
+                    maxLines: 3,
+                    validator: (v) => v == null || v.isEmpty ? 'Requis' : null,
                   ),
-                  items: AlertPriority.values
-                      .map((priority) => DropdownMenuItem(
-                            value: priority,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                    color: priority.color,
-                                    shape: BoxShape.circle,
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<AlertPriority>(
+                    value: _priority,
+                    dropdownColor: AppTheme.card,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      labelText: 'Priorité résultante *',
+                      prefixIcon: Icon(Icons.priority_high),
+                    ),
+                    items: AlertPriority.values
+                        .map((priority) => DropdownMenuItem(
+                              value: priority,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 12,
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      color: priority.color,
+                                      shape: BoxShape.circle,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(priority.displayName),
-                              ],
-                            ),
-                          ))
-                      .toList(),
-                  onChanged: (v) => setState(() => _priority = v!),
-                ),
-                const SizedBox(height: 16),
-                SwitchListTile(
-                  title: const Text('Règle active',
-                      style: TextStyle(color: Colors.white)),
-                  subtitle: const Text('La règle génère des alertes',
-                      style: TextStyle(color: AppTheme.textDim)),
-                  value: _isActive,
-                  onChanged: (v) => setState(() => _isActive = v),
-                  activeColor: AppTheme.neon,
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Annuler'),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton(
-                      onPressed: _save,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.neon,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
+                                  const SizedBox(width: 8),
+                                  Text(priority.displayName),
+                                ],
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (v) => setState(() => _priority = v!),
+                  ),
+                  const SizedBox(height: 16),
+                  SwitchListTile(
+                    title: const Text('Règle active',
+                        style: TextStyle(color: Colors.white)),
+                    subtitle: const Text('La règle génère des alertes',
+                        style: TextStyle(color: AppTheme.textDim)),
+                    value: _isActive,
+                    onChanged: (v) => setState(() => _isActive = v),
+                    activeThumbColor: AppTheme.neon,
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Annuler'),
                       ),
-                      child: Text(isEdit ? 'Modifier' : 'Créer'),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 12),
+                      ElevatedButton(
+                        onPressed: _save,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.neon,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                        ),
+                        child: Text(isEdit ? 'Modifier' : 'Créer'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

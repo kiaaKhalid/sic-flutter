@@ -49,7 +49,9 @@ class _CaregiversManagementScreenState
   Future<void> _showAddCaregiverDialog() async {
     final result = await showDialog<Caregiver>(
       context: context,
-      builder: (context) => const CaregiverFormDialog(),
+      useRootNavigator: true,
+      barrierDismissible: true,
+      builder: (dialogContext) => const CaregiverFormDialog(),
     );
 
     if (result != null) {
@@ -60,7 +62,9 @@ class _CaregiversManagementScreenState
   Future<void> _showEditCaregiverDialog(Caregiver caregiver) async {
     final result = await showDialog<Caregiver>(
       context: context,
-      builder: (context) => CaregiverFormDialog(caregiver: caregiver),
+      useRootNavigator: true,
+      barrierDismissible: true,
+      builder: (dialogContext) => CaregiverFormDialog(caregiver: caregiver),
     );
 
     if (result != null) {

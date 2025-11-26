@@ -124,7 +124,7 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: neon,
           foregroundColor: Colors.black,
-          minimumSize: const Size(double.infinity, buttonHeight),
+          minimumSize: const Size(0, buttonHeight),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadiusL),
           ),
@@ -132,7 +132,7 @@ class AppTheme {
             fontSize: fontSizeMedium,
             fontWeight: FontWeight.w600,
           ),
-          padding: const EdgeInsets.symmetric(vertical: spacingS),
+          padding: const EdgeInsets.symmetric(vertical: spacingS, horizontal: spacingM),
         ),
       ),
       // Thème des cartes
@@ -141,10 +141,27 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadiusL),
-          side: BorderSide(color: Colors.white.withOpacity(0.1)),
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
+      ),
+      // Thème des dialogs pour assurer leur visibilité
+      dialogTheme: DialogThemeData(
+        backgroundColor: card,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadiusL),
+        ),
+        elevation: 24,
+      ),
+      // Thème des popups et menus
+      popupMenuTheme: PopupMenuThemeData(
+        color: card,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadiusM),
+        ),
       ),
     );
   }

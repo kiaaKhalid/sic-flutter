@@ -54,7 +54,9 @@ class _PatientsManagementScreenState extends State<PatientsManagementScreen> {
   Future<void> _showAddPatientDialog() async {
     final result = await showDialog<AdminPatient>(
       context: context,
-      builder: (context) => const PatientFormDialog(),
+      useRootNavigator: true,
+      barrierDismissible: true,
+      builder: (dialogContext) => const PatientFormDialog(),
     );
 
     if (result != null) {
@@ -65,7 +67,9 @@ class _PatientsManagementScreenState extends State<PatientsManagementScreen> {
   Future<void> _showEditPatientDialog(AdminPatient patient) async {
     final result = await showDialog<AdminPatient>(
       context: context,
-      builder: (context) => PatientFormDialog(patient: patient),
+      useRootNavigator: true,
+      barrierDismissible: true,
+      builder: (dialogContext) => PatientFormDialog(patient: patient),
     );
 
     if (result != null) {
@@ -76,7 +80,9 @@ class _PatientsManagementScreenState extends State<PatientsManagementScreen> {
   Future<void> _confirmDeletePatient(AdminPatient patient) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      useRootNavigator: true,
+      barrierDismissible: true,
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: AppTheme.card,
         title: const Text(
           'Confirmer la suppression',
@@ -88,11 +94,11 @@ class _PatientsManagementScreenState extends State<PatientsManagementScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(dialogContext, false),
             child: const Text('Annuler'),
           ),
           ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(dialogContext, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),

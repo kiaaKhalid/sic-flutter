@@ -35,7 +35,9 @@ class _AlertRulesScreenState extends State<AlertRulesScreen> {
   Future<void> _showAddRuleDialog() async {
     final result = await showDialog<AlertRule>(
       context: context,
-      builder: (context) => const AlertRuleFormDialog(),
+      useRootNavigator: true,
+      barrierDismissible: true,
+      builder: (dialogContext) => const AlertRuleFormDialog(),
     );
     if (result != null) widget.onRuleAdded(result);
   }
@@ -43,7 +45,9 @@ class _AlertRulesScreenState extends State<AlertRulesScreen> {
   Future<void> _showEditRuleDialog(AlertRule rule) async {
     final result = await showDialog<AlertRule>(
       context: context,
-      builder: (context) => AlertRuleFormDialog(rule: rule),
+      useRootNavigator: true,
+      barrierDismissible: true,
+      builder: (dialogContext) => AlertRuleFormDialog(rule: rule),
     );
     if (result != null) widget.onRuleUpdated(result);
   }

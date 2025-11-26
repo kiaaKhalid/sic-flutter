@@ -36,11 +36,16 @@ class TravelAuthApp extends StatelessWidget {
     return MaterialApp(
       title: 'SAC-MP - Administrateur Système',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark(),
+      theme: AppTheme.dark().copyWith(
+        // Applique Google Fonts Poppins au niveau du thème
+        textTheme: GoogleFonts.poppinsTextTheme(AppTheme.dark().textTheme),
+      ),
+      // Configuration du Dialog theme pour assurer la visibilité des popups
       builder: (context, child) {
-        // Assure une police cohérente dans toute l'application sans masquer les Dialog routes
-        return DefaultTextStyle.merge(
-          style: GoogleFonts.poppins(),
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(1.0),
+          ),
           child: child ?? const SizedBox.shrink(),
         );
       },
