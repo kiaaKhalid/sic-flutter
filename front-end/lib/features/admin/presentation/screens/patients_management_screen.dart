@@ -122,118 +122,119 @@ class _PatientsManagementScreenState extends State<PatientsManagementScreen> {
         return Stack(
           children: [
             Column(
-          children: [
-            // Barre de recherche et filtres
-            Container(
-              padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
-              decoration: BoxDecoration(
-                color: AppTheme.card,
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.white.withOpacity(0.1),
-                  ),
-                ),
-              ),
-              child: Column(
-                children: [
-                  TextField(
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText:
-                          'Rechercher par nom, dossier médical ou email...',
-                      hintStyle: TextStyle(color: AppTheme.textDim),
-                      prefixIcon: const Icon(Icons.search,
-                          color: AppTheme.textDim),
-                      filled: true,
-                      fillColor: AppTheme.bg,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+              children: [
+                // Barre de recherche et filtres
+                Container(
+                  padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
+                  decoration: BoxDecoration(
+                    color: AppTheme.card,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.white.withOpacity(0.1),
                       ),
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        _searchQuery = value;
-                      });
-                    },
                   ),
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
+                  child: Column(
                     children: [
-                      Text('Statut:',
-                          style: TextStyle(color: AppTheme.textDim)),
-                      ...['Tous', 'Actif', 'Archivé'].map((status) {
-                        final isSelected = _filterStatus == status;
-                        return FilterChip(
-                          label: Text(status),
-                          selected: isSelected,
-                          onSelected: (selected) =>
-                              setState(() => _filterStatus = status),
-                          backgroundColor: AppTheme.bg,
-                          selectedColor: AppTheme.neon.withOpacity(0.3),
-                          labelStyle: TextStyle(
-                            color: isSelected ? AppTheme.neon : Colors.white,
+                      TextField(
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText:
+                              'Rechercher par nom, dossier médical ou email...',
+                          hintStyle: TextStyle(color: AppTheme.textDim),
+                          prefixIcon:
+                              const Icon(Icons.search, color: AppTheme.textDim),
+                          filled: true,
+                          fillColor: AppTheme.bg,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
                           ),
-                        );
-                      }),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Liste des patients
-            Expanded(
-              child: _filteredPatients.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _searchQuery = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
                         children: [
-                          Icon(
-                            Icons.search_off,
-                            size: 64,
-                            color: AppTheme.textDim,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Aucun patient trouvé',
-                            style: TextStyle(
-                              color: AppTheme.textDim,
-                              fontSize: 16,
-                            ),
-                          ),
+                          Text('Statut:',
+                              style: TextStyle(color: AppTheme.textDim)),
+                          ...['Tous', 'Actif', 'Archivé'].map((status) {
+                            final isSelected = _filterStatus == status;
+                            return FilterChip(
+                              label: Text(status),
+                              selected: isSelected,
+                              onSelected: (selected) =>
+                                  setState(() => _filterStatus = status),
+                              backgroundColor: AppTheme.bg,
+                              selectedColor: AppTheme.neon.withOpacity(0.3),
+                              labelStyle: TextStyle(
+                                color:
+                                    isSelected ? AppTheme.neon : Colors.white,
+                              ),
+                            );
+                          }),
                         ],
                       ),
-                    )
-                  : ListView.builder(
-                      padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
-                      itemCount: _filteredPatients.length,
-                      itemBuilder: (context, index) {
-                        return _buildPatientCard(
-                            _filteredPatients[index], isMobile);
-                      },
-                    ),
+                    ],
+                  ),
+                ),
+
+                // Liste des patients
+                Expanded(
+                  child: _filteredPatients.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.search_off,
+                                size: 64,
+                                color: AppTheme.textDim,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Aucun patient trouvé',
+                                style: TextStyle(
+                                  color: AppTheme.textDim,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
+                          itemCount: _filteredPatients.length,
+                          itemBuilder: (context, index) {
+                            return _buildPatientCard(
+                                _filteredPatients[index], isMobile);
+                          },
+                        ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 24,
+              right: 24,
+              child: FloatingActionButton.extended(
+                onPressed: _showAddPatientDialog,
+                backgroundColor: AppTheme.neon,
+                foregroundColor: Colors.black,
+                icon: const Icon(Icons.add),
+                label: const Text('Ajouter Patient'),
+              ),
             ),
           ],
-        ),
-          Positioned(
-            bottom: 24,
-            right: 24,
-            child: FloatingActionButton.extended(
-              onPressed: _showAddPatientDialog,
-              backgroundColor: AppTheme.neon,
-              foregroundColor: Colors.black,
-              icon: const Icon(Icons.add),
-              label: const Text('Ajouter Patient'),
-            ),
-          ),
-        ],
-      );
+        );
       },
     );
   }

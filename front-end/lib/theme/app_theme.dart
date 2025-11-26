@@ -132,20 +132,21 @@ class AppTheme {
             fontSize: fontSizeMedium,
             fontWeight: FontWeight.w600,
           ),
-          padding: const EdgeInsets.symmetric(vertical: spacingS, horizontal: spacingM),
+          padding: const EdgeInsets.symmetric(
+              vertical: spacingS, horizontal: spacingM),
         ),
       ),
       // Thème des cartes
       cardTheme: ThemeData.dark().cardTheme.copyWith(
-        color: card,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadiusL),
-          side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-        ),
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
-      ),
+            color: card,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(borderRadiusL),
+              side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+            ),
+            margin: EdgeInsets.zero,
+            clipBehavior: Clip.antiAlias,
+          ),
       // Thème des dialogs pour assurer leur visibilité
       dialogTheme: DialogThemeData(
         backgroundColor: card,

@@ -82,120 +82,124 @@ class _CaregiversManagementScreenState
           children: [
             Column(
               children: [
-            // Barre de recherche
-            Container(
-              padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
-              decoration: BoxDecoration(
-                color: AppTheme.card,
-                border: Border(
-                  bottom: BorderSide(color: Colors.white.withOpacity(0.1)),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText:
-                                'Rechercher par nom, matricule ou rôle...',
-                            hintStyle: TextStyle(color: AppTheme.textDim),
-                            prefixIcon: const Icon(Icons.search,
-                                color: AppTheme.textDim),
-                            filled: true,
-                            fillColor: AppTheme.bg,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          onChanged: (value) =>
-                              setState(() => _searchQuery = value),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Text('Statut:',
-                          style: TextStyle(color: AppTheme.textDim)),
-                      const SizedBox(width: 12),
-                      ...['Tous', 'Actif', 'Inactif'].map((status) {
-                        final isSelected = _filterStatus == status;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: FilterChip(
-                            label: Text(status),
-                            selected: isSelected,
-                            onSelected: (selected) =>
-                                setState(() => _filterStatus = status),
-                            backgroundColor: AppTheme.bg,
-                            selectedColor: AppTheme.neon.withOpacity(0.3),
-                            labelStyle: TextStyle(
-                              color: isSelected ? AppTheme.neon : Colors.white,
-                            ),
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Liste
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
-                itemCount: _filteredCaregivers.length,
-                itemBuilder: (context, index) {
-                  final caregiver = _filteredCaregivers[index];
-                  return Card(
+                // Barre de recherche
+                Container(
+                  padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
+                  decoration: BoxDecoration(
                     color: AppTheme.card,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: caregiver.statusColor.withOpacity(0.2),
-                        child: Icon(caregiver.roleIcon,
-                            color: caregiver.statusColor),
-                      ),
-                      title: Text(caregiver.fullName,
-                          style: const TextStyle(color: Colors.white)),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    border: Border(
+                      bottom: BorderSide(color: Colors.white.withOpacity(0.1)),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
                         children: [
-                          Text(
-                              '${caregiver.clinicalRole} • ${caregiver.matricule}',
-                              style: TextStyle(color: AppTheme.textDim)),
-                          Text('${caregiver.assignedPatientsCount} patients',
-                              style: TextStyle(color: AppTheme.textDim)),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (caregiver.has2FA)
-                            Icon(Icons.security,
-                                color: AppTheme.neon, size: 18),
-                          const SizedBox(width: 8),
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () =>
-                                _showEditCaregiverDialog(caregiver),
+                          Expanded(
+                            child: TextField(
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                hintText:
+                                    'Rechercher par nom, matricule ou rôle...',
+                                hintStyle: TextStyle(color: AppTheme.textDim),
+                                prefixIcon: const Icon(Icons.search,
+                                    color: AppTheme.textDim),
+                                filled: true,
+                                fillColor: AppTheme.bg,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                              onChanged: (value) =>
+                                  setState(() => _searchQuery = value),
+                            ),
                           ),
                         ],
                       ),
-                      onTap: () => _showEditCaregiverDialog(caregiver),
-                    ),
-                  );
-                },
-              ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Text('Statut:',
+                              style: TextStyle(color: AppTheme.textDim)),
+                          const SizedBox(width: 12),
+                          ...['Tous', 'Actif', 'Inactif'].map((status) {
+                            final isSelected = _filterStatus == status;
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: FilterChip(
+                                label: Text(status),
+                                selected: isSelected,
+                                onSelected: (selected) =>
+                                    setState(() => _filterStatus = status),
+                                backgroundColor: AppTheme.bg,
+                                selectedColor: AppTheme.neon.withOpacity(0.3),
+                                labelStyle: TextStyle(
+                                  color:
+                                      isSelected ? AppTheme.neon : Colors.white,
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Liste
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
+                    itemCount: _filteredCaregivers.length,
+                    itemBuilder: (context, index) {
+                      final caregiver = _filteredCaregivers[index];
+                      return Card(
+                        color: AppTheme.card,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor:
+                                caregiver.statusColor.withOpacity(0.2),
+                            child: Icon(caregiver.roleIcon,
+                                color: caregiver.statusColor),
+                          ),
+                          title: Text(caregiver.fullName,
+                              style: const TextStyle(color: Colors.white)),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  '${caregiver.clinicalRole} • ${caregiver.matricule}',
+                                  style: TextStyle(color: AppTheme.textDim)),
+                              Text(
+                                  '${caregiver.assignedPatientsCount} patients',
+                                  style: TextStyle(color: AppTheme.textDim)),
+                            ],
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (caregiver.has2FA)
+                                Icon(Icons.security,
+                                    color: AppTheme.neon, size: 18),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () =>
+                                    _showEditCaregiverDialog(caregiver),
+                              ),
+                            ],
+                          ),
+                          onTap: () => _showEditCaregiverDialog(caregiver),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
             Positioned(
               bottom: 24,
               right: 24,

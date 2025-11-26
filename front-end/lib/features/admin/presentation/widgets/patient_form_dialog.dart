@@ -114,7 +114,8 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                             labelText: 'Nom complet *',
                             prefixIcon: Icon(Icons.person),
                           ),
-                          validator: (v) => v == null || v.isEmpty ? 'Requis' : null,
+                          validator: (v) =>
+                              v == null || v.isEmpty ? 'Requis' : null,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
@@ -124,7 +125,8 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                             labelText: 'Dossier médical (MR-YYYY-XXX) *',
                             prefixIcon: Icon(Icons.badge),
                           ),
-                          validator: (v) => v == null || v.isEmpty ? 'Requis' : null,
+                          validator: (v) =>
+                              v == null || v.isEmpty ? 'Requis' : null,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
@@ -134,7 +136,8 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                             labelText: 'Email *',
                             prefixIcon: Icon(Icons.email),
                           ),
-                          validator: (v) => v == null || v.isEmpty ? 'Requis' : null,
+                          validator: (v) =>
+                              v == null || v.isEmpty ? 'Requis' : null,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
@@ -144,7 +147,8 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                             labelText: 'Téléphone *',
                             prefixIcon: Icon(Icons.phone),
                           ),
-                          validator: (v) => v == null || v.isEmpty ? 'Requis' : null,
+                          validator: (v) =>
+                              v == null || v.isEmpty ? 'Requis' : null,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
@@ -155,7 +159,8 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                             prefixIcon: Icon(Icons.home),
                           ),
                           maxLines: 2,
-                          validator: (v) => v == null || v.isEmpty ? 'Requis' : null,
+                          validator: (v) =>
+                              v == null || v.isEmpty ? 'Requis' : null,
                         ),
                         const SizedBox(height: 16),
                         DropdownButtonFormField<String>(
@@ -167,7 +172,8 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                             prefixIcon: Icon(Icons.wc),
                           ),
                           items: ['M', 'F', 'Autre']
-                              .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                              .map((g) =>
+                                  DropdownMenuItem(value: g, child: Text(g)))
                               .toList(),
                           onChanged: (v) => setState(() => _gender = v!),
                         ),
@@ -180,7 +186,8 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                               firstDate: DateTime(1900),
                               lastDate: DateTime.now(),
                             );
-                            if (date != null) setState(() => _dateOfBirth = date);
+                            if (date != null)
+                              setState(() => _dateOfBirth = date);
                           },
                           child: InputDecorator(
                             decoration: const InputDecoration(
@@ -195,12 +202,17 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                         ),
                         const SizedBox(height: 16),
                         const Text('Paramètres surveillés:',
-                            style: TextStyle(color: Colors.white, fontSize: 14)),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 14)),
                         const SizedBox(height: 8),
                         Wrap(
                           spacing: 8,
-                          children:
-                              ['RYTHME', 'SOMMEIL', 'HUMEUR', 'CORRELATION'].map((param) {
+                          children: [
+                            'RYTHME',
+                            'SOMMEIL',
+                            'HUMEUR',
+                            'CORRELATION'
+                          ].map((param) {
                             final isSelected = _monitoredParams.contains(param);
                             return FilterChip(
                               label: Text(param),
@@ -215,7 +227,8 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                                 });
                               },
                               backgroundColor: AppTheme.bg,
-                              selectedColor: AppTheme.neon.withValues(alpha: 0.3),
+                              selectedColor:
+                                  AppTheme.neon.withValues(alpha: 0.3),
                             );
                           }).toList(),
                         ),

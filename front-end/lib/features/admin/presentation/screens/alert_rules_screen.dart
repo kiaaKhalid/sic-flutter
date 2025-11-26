@@ -62,104 +62,106 @@ class _AlertRulesScreenState extends State<AlertRulesScreen> {
           children: [
             Column(
               children: [
-            Container(
-              padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
-              decoration: BoxDecoration(
-                color: AppTheme.card,
-                border: Border(
-                    bottom: BorderSide(color: Colors.white.withOpacity(0.1))),
-              ),
-              child: Wrap(
-                spacing: 8,
-                children: [
-                  'Tous',
-                  ...ParameterType.values.map((e) => e.displayName)
-                ].map((param) {
-                  final isSelected = _filterParameter == param;
-                  return FilterChip(
-                    label: Text(param),
-                    selected: isSelected,
-                    onSelected: (selected) =>
-                        setState(() => _filterParameter = param),
-                    backgroundColor: AppTheme.bg,
-                    selectedColor: AppTheme.neon.withOpacity(0.3),
-                  );
-                }).toList(),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
-                itemCount: _filteredRules.length,
-                itemBuilder: (context, index) {
-                  final rule = _filteredRules[index];
-                  return Card(
+                Container(
+                  padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
+                  decoration: BoxDecoration(
                     color: AppTheme.card,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor:
-                            rule.parameterType.color.withOpacity(0.2),
-                        child: Icon(rule.parameterType.icon,
-                            color: rule.parameterType.color),
-                      ),
-                      title: Text(rule.name,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(rule.conditionDefinition,
-                              style: TextStyle(color: AppTheme.textDim)),
-                          Row(
+                    border: Border(
+                        bottom:
+                            BorderSide(color: Colors.white.withOpacity(0.1))),
+                  ),
+                  child: Wrap(
+                    spacing: 8,
+                    children: [
+                      'Tous',
+                      ...ParameterType.values.map((e) => e.displayName)
+                    ].map((param) {
+                      final isSelected = _filterParameter == param;
+                      return FilterChip(
+                        label: Text(param),
+                        selected: isSelected,
+                        onSelected: (selected) =>
+                            setState(() => _filterParameter = param),
+                        backgroundColor: AppTheme.bg,
+                        selectedColor: AppTheme.neon.withOpacity(0.3),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
+                    itemCount: _filteredRules.length,
+                    itemBuilder: (context, index) {
+                      final rule = _filteredRules[index];
+                      return Card(
+                        color: AppTheme.card,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor:
+                                rule.parameterType.color.withOpacity(0.2),
+                            child: Icon(rule.parameterType.icon,
+                                color: rule.parameterType.color),
+                          ),
+                          title: Text(rule.name,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: rule.resultPriority.color
-                                      .withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  rule.resultPriority.displayName,
-                                  style: TextStyle(
-                                      color: rule.resultPriority.color,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: rule.statusColor.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  rule.statusText,
-                                  style: TextStyle(
-                                      color: rule.statusColor, fontSize: 11),
-                                ),
+                              Text(rule.conditionDefinition,
+                                  style: TextStyle(color: AppTheme.textDim)),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: rule.resultPriority.color
+                                          .withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      rule.resultPriority.displayName,
+                                      style: TextStyle(
+                                          color: rule.resultPriority.color,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: rule.statusColor.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      rule.statusText,
+                                      style: TextStyle(
+                                          color: rule.statusColor,
+                                          fontSize: 11),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () => _showEditRuleDialog(rule),
-                      ),
-                      onTap: () => _showEditRuleDialog(rule),
-                    ),
-                  );
-                },
-              ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () => _showEditRuleDialog(rule),
+                          ),
+                          onTap: () => _showEditRuleDialog(rule),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
             Positioned(
               bottom: 24,
               right: 24,
