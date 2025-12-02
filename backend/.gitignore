@@ -31,3 +31,26 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Backend
+.env
+*.log
+logs/
+*.jar
+*.class
+
+# IDE
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+uploads/
+
+# H2 Database
+*.db
+*.mv.db
+*.trace.db
