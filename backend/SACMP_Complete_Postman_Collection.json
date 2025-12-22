@@ -1,0 +1,1374 @@
+{
+	"info": {
+		"_postman_id": "sacmp-complete-collection",
+		"name": "SAC-MP API Complete Collection",
+		"description": "Collection complète des APIs SAC-MP avec tests end-to-end",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		}
+	],
+	"item": [
+		{
+			"name": "🔐 Authentication",
+			"item": [
+				{
+					"name": "1. Register - Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Response contains token', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('accessToken');",
+									"    pm.expect(jsonData).to.have.property('refreshToken');",
+									"});",
+									"",
+									"pm.test('Save tokens to environment', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('patientAccessToken', jsonData.accessToken);",
+									"    pm.environment.set('patientRefreshToken', jsonData.refreshToken);",
+									"    if (jsonData.userId) {",
+									"        pm.environment.set('patientUserId', jsonData.userId);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Patient Test\",\n    \"email\": \"patient.test@example.com\",\n    \"password\": \"Password123!\",\n    \"confirmPassword\": \"Password123!\",\n    \"role\": \"PATIENT\",\n    \"phoneNumber\": \"+33612345678\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "2. Register - Healthcare Worker",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Response contains token', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('accessToken');",
+									"});",
+									"",
+									"pm.test('Save healthcare worker tokens', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('healthcareAccessToken', jsonData.accessToken);",
+									"    pm.environment.set('healthcareRefreshToken', jsonData.refreshToken);",
+									"    if (jsonData.userId) {",
+									"        pm.environment.set('healthcareUserId', jsonData.userId);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Dr. Jean Dupont\",\n    \"email\": \"doctor.test@example.com\",\n    \"password\": \"Password123!\",\n    \"confirmPassword\": \"Password123!\",\n    \"role\": \"HEALTHCARE_WORKER\",\n    \"phoneNumber\": \"+33698765432\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "3. Register - Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Save admin tokens', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('adminAccessToken', jsonData.accessToken);",
+									"    pm.environment.set('adminRefreshToken', jsonData.refreshToken);",
+									"    if (jsonData.userId) {",
+									"        pm.environment.set('adminUserId', jsonData.userId);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Admin System\",\n    \"email\": \"admin.test@example.com\",\n    \"password\": \"Password123!\",\n    \"confirmPassword\": \"Password123!\",\n    \"role\": \"ADMIN\",\n    \"phoneNumber\": \"+33611111111\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "4. Login - Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response contains accessToken', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('accessToken');",
+									"    pm.expect(jsonData.accessToken).to.be.a('string');",
+									"});",
+									"",
+									"pm.test('Save patient tokens', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('patientAccessToken', jsonData.accessToken);",
+									"    pm.environment.set('patientRefreshToken', jsonData.refreshToken);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"patient.test@example.com\",\n    \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "5. Login - Healthcare Worker",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Save healthcare tokens', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('healthcareAccessToken', jsonData.accessToken);",
+									"    pm.environment.set('healthcareRefreshToken', jsonData.refreshToken);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"doctor.test@example.com\",\n    \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "6. Login - Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Save admin tokens', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('adminAccessToken', jsonData.accessToken);",
+									"    pm.environment.set('adminRefreshToken', jsonData.refreshToken);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin.test@example.com\",\n    \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "7. Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{patientRefreshToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/refresh-token",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "refresh-token"]
+						}
+					}
+				},
+				{
+					"name": "8. Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{patientAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "logout"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👨‍💼 Admin",
+			"item": [
+				{
+					"name": "1. Create Patient for User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Patient created successfully', function () {",
+									"    pm.expect(pm.response.text()).to.include('Patient créé');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/admin/create-patient/{{patientUserId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "admin", "create-patient", "{{patientUserId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🏥 Patient",
+			"item": [
+				{
+					"name": "1. Get Dashboard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is valid JSON', function () {",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{patientAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/patients/dashboard",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "patients", "dashboard"]
+						}
+					}
+				},
+				{
+					"name": "2. Declare Mood - Happy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Mood declared successfully', function () {",
+									"    pm.expect(pm.response.text()).to.include('succès');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{patientAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"moodValue\": \"HAPPY\",\n    \"notes\": \"Je me sens bien aujourd'hui\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/patients/mood",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "patients", "mood"]
+						}
+					}
+				},
+				{
+					"name": "3. Declare Mood - Anxious",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{patientAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"moodValue\": \"ANXIOUS\",\n    \"notes\": \"Un peu stressé par les examens\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/patients/mood",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "patients", "mood"]
+						}
+					}
+				},
+				{
+					"name": "4. Get Mood History",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is valid JSON', function () {",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{patientAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/patients/mood/history?days=30",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "patients", "mood", "history"],
+							"query": [
+								{
+									"key": "days",
+									"value": "30"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "5. Get Patient Alerts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{patientAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/patients/alerts",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "patients", "alerts"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👨‍⚕️ Healthcare Worker",
+			"item": [
+				{
+					"name": "1. Get Dashboard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response contains dashboard data', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('object');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/healthcare-workers/dashboard",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "healthcare-workers", "dashboard"]
+						}
+					}
+				},
+				{
+					"name": "2. Get All Patients",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is paginated', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('content');",
+									"});",
+									"",
+									"pm.test('Save first patient ID', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.content && jsonData.content.length > 0) {",
+									"        pm.environment.set('testPatientId', jsonData.content[0].id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/healthcare-workers/patients?page=0&size=10&sort=createdAt,desc",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "healthcare-workers", "patients"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "sort",
+									"value": "createdAt,desc"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "3. Add New Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Save new patient ID', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.id) {",
+									"        pm.environment.set('newPatientId', jsonData.id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Marie Martin\",\n    \"email\": \"marie.martin@example.com\",\n    \"medicalRecordId\": \"MR-2024-001\",\n    \"birthDate\": \"1985-03-15\",\n    \"sex\": \"F\",\n    \"roomNumber\": \"A-101\",\n    \"phoneNumber\": \"+33622334455\",\n    \"emergencyContactName\": \"Pierre Martin\",\n    \"emergencyContactPhone\": \"+33633445566\",\n    \"medicalNotes\": \"Suivi post-opératoire\",\n    \"allergies\": \"Pénicilline\",\n    \"currentMedications\": \"Doliprane 500mg\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/healthcare-workers/patients",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "healthcare-workers", "patients"]
+						}
+					}
+				},
+				{
+					"name": "4. Get Patient by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Patient data is returned', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/healthcare-workers/patients/{{testPatientId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "healthcare-workers", "patients", "{{testPatientId}}"]
+						}
+					}
+				},
+				{
+					"name": "5. Delete Patient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Patient deleted successfully', function () {",
+									"    pm.expect(pm.response.text()).to.include('succès');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/healthcare-workers/patients/{{newPatientId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "healthcare-workers", "patients", "{{newPatientId}}"]
+						}
+					}
+				},
+				{
+					"name": "6. Get Alerts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/healthcare-workers/alerts?page=0&size=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "healthcare-workers", "alerts"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "❤️ Health Data",
+			"item": [
+				{
+					"name": "1. Get Heart Rate Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response contains heart rate data', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('object');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/health/heart-rate/{{testPatientId}}?period=24h",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "health", "heart-rate", "{{testPatientId}}"],
+							"query": [
+								{
+									"key": "period",
+									"value": "24h"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "2. Get Sleep Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response contains sleep data', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('object');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/health/sleep/{{testPatientId}}?period=7d",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "health", "sleep", "{{testPatientId}}"],
+							"query": [
+								{
+									"key": "period",
+									"value": "7d"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "3. Get Correlation Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/health/correlation/{{testPatientId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "health", "correlation", "{{testPatientId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🚨 Alerts",
+			"item": [
+				{
+					"name": "1. Get Active Alerts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is paginated', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('content');",
+									"});",
+									"",
+									"pm.test('Save first alert ID if exists', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.content && jsonData.content.length > 0) {",
+									"        pm.environment.set('testAlertId', jsonData.content[0].id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/alerts?page=0&size=20",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "alerts"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "2. Get Patient Alerts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is an array', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/alerts/patient/{{testPatientId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "alerts", "patient", "{{testPatientId}}"]
+						}
+					}
+				},
+				{
+					"name": "3. Get Alert by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Alert data returned', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/alerts/{{testAlertId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "alerts", "{{testAlertId}}"]
+						}
+					}
+				},
+				{
+					"name": "4. Acknowledge Alert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Alert acknowledged', function () {",
+									"    pm.expect(pm.response.text()).to.include('Alerte');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"note\": \"Alerte prise en compte, patient en observation\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/alerts/{{testAlertId}}/acknowledge",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "alerts", "{{testAlertId}}", "acknowledge"]
+						}
+					}
+				},
+				{
+					"name": "5. Resolve Alert",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Alert resolved', function () {",
+									"    pm.expect(pm.response.text()).to.include('résolue');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{healthcareAccessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"resolutionNote\": \"Situation stabilisée après intervention\",\n    \"actionTaken\": \"Administration de médicaments et surveillance renforcée\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/alerts/{{testAlertId}}/resolve",
+							"host": ["{{baseUrl}}"],
+							"path": ["v1", "alerts", "{{testAlertId}}", "resolve"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🧪 E2E Test Scenarios",
+			"item": [
+				{
+					"name": "Scenario 1: Patient Complete Flow",
+					"item": [
+						{
+							"name": "1.1 Register Patient",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Patient registered', function () {",
+											"    pm.response.to.have.status(201);",
+											"    var jsonData = pm.response.json();",
+											"    pm.environment.set('e2e_patientToken', jsonData.accessToken);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"fullName\": \"E2E Patient Test\",\n    \"email\": \"e2e.patient.{{$timestamp}}@test.com\",\n    \"password\": \"Password123!\",\n    \"confirmPassword\": \"Password123!\",\n    \"role\": \"PATIENT\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/register",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "auth", "register"]
+								}
+							}
+						},
+						{
+							"name": "1.2 Declare Mood",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Mood declared', function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Content-Type", "value": "application/json"},
+									{"key": "Authorization", "value": "Bearer {{e2e_patientToken}}"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"moodValue\": \"CALM\",\n    \"notes\": \"Test E2E - Feeling calm\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/v1/patients/mood",
+									"host": ["{{baseUrl}}"],
+									"path": ["v1", "patients", "mood"]
+								}
+							}
+						},
+						{
+							"name": "1.3 Get Dashboard",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Dashboard loaded', function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{e2e_patientToken}}"}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/v1/patients/dashboard",
+									"host": ["{{baseUrl}}"],
+									"path": ["v1", "patients", "dashboard"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Scenario 2: Healthcare Worker Flow",
+					"item": [
+						{
+							"name": "2.1 Login Healthcare Worker",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Logged in', function () {",
+											"    pm.response.to.have.status(200);",
+											"    var jsonData = pm.response.json();",
+											"    pm.environment.set('e2e_hwToken', jsonData.accessToken);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [{"key": "Content-Type", "value": "application/json"}],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"doctor.test@example.com\",\n    \"password\": \"Password123!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/login",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "auth", "login"]
+								}
+							}
+						},
+						{
+							"name": "2.2 View Dashboard",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Dashboard accessible', function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{e2e_hwToken}}"}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/v1/healthcare-workers/dashboard",
+									"host": ["{{baseUrl}}"],
+									"path": ["v1", "healthcare-workers", "dashboard"]
+								}
+							}
+						},
+						{
+							"name": "2.3 List All Patients",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Patients listed', function () {",
+											"    pm.response.to.have.status(200);",
+											"    var jsonData = pm.response.json();",
+											"    if (jsonData.content && jsonData.content.length > 0) {",
+											"        pm.environment.set('e2e_patientId', jsonData.content[0].id);",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{e2e_hwToken}}"}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/v1/healthcare-workers/patients",
+									"host": ["{{baseUrl}}"],
+									"path": ["v1", "healthcare-workers", "patients"]
+								}
+							}
+						},
+						{
+							"name": "2.4 Check Alerts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Alerts checked', function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{e2e_hwToken}}"}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/v1/alerts",
+									"host": ["{{baseUrl}}"],
+									"path": ["v1", "alerts"]
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
