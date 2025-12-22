@@ -47,12 +47,18 @@ class HealthMetricCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: isSmall ? 12 : 16),
-          Text(
-            '${metric.value} ${metric.unit}',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: isSmall ? 18 : 20,
-              fontWeight: isSmall ? FontWeight.w600 : FontWeight.bold,
+          SizedBox(height: isSmall ? 12 : 16),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '${metric.value} ${metric.unit}',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: isSmall ? 18 : 20,
+                fontWeight: isSmall ? FontWeight.w600 : FontWeight.bold,
+              ),
+              maxLines: 1,
             ),
           ),
           const SizedBox(height: 4),
