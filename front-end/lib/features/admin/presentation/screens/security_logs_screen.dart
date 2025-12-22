@@ -45,26 +45,29 @@ class _SecurityLogsScreenState extends State<SecurityLogsScreen> {
               ),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Text('Rôle:', style: TextStyle(color: AppTheme.textDim)),
-                      const SizedBox(width: 8),
-                      ...['Tous', 'Administrateur', 'Soignant', 'Patient']
-                          .map((role) {
-                        final isSelected = _filterRole == role;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: FilterChip(
-                            label: Text(role),
-                            selected: isSelected,
-                            onSelected: (selected) =>
-                                setState(() => _filterRole = role),
-                            backgroundColor: AppTheme.bg,
-                            selectedColor: AppTheme.neon.withOpacity(0.3),
-                          ),
-                        );
-                      }),
-                    ],
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Text('Rôle:', style: TextStyle(color: AppTheme.textDim)),
+                        const SizedBox(width: 8),
+                        ...['Tous', 'Administrateur', 'Soignant', 'Patient']
+                            .map((role) {
+                          final isSelected = _filterRole == role;
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: FilterChip(
+                              label: Text(role),
+                              selected: isSelected,
+                              onSelected: (selected) =>
+                                  setState(() => _filterRole = role),
+                              backgroundColor: AppTheme.bg,
+                              selectedColor: AppTheme.neon.withOpacity(0.3),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
                   ),
                 ],
               ),
