@@ -31,11 +31,14 @@ class ProfileHeader extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Bonjour',
-                  style: TextStyle(
-                    fontSize: isMobile ? 14 : 16,
-                    color: Colors.grey[600],
+                Semantics(
+                  label: 'Dashboard Greeting',
+                  child: Text(
+                    'Bonjour',
+                    style: TextStyle(
+                      fontSize: isMobile ? 14 : 16,
+                      color: Colors.grey[600],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 4),
