@@ -118,30 +118,33 @@ class _CaregiversManagementScreenState
                         ],
                       ),
                       const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Text('Statut:',
-                              style: TextStyle(color: AppTheme.textDim)),
-                          const SizedBox(width: 12),
-                          ...['Tous', 'Actif', 'Inactif'].map((status) {
-                            final isSelected = _filterStatus == status;
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: FilterChip(
-                                label: Text(status),
-                                selected: isSelected,
-                                onSelected: (selected) =>
-                                    setState(() => _filterStatus = status),
-                                backgroundColor: AppTheme.bg,
-                                selectedColor: AppTheme.neon.withOpacity(0.3),
-                                labelStyle: TextStyle(
-                                  color:
-                                      isSelected ? AppTheme.neon : Colors.white,
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            Text('Statut:',
+                                style: TextStyle(color: AppTheme.textDim)),
+                            const SizedBox(width: 12),
+                            ...['Tous', 'Actif', 'Inactif'].map((status) {
+                              final isSelected = _filterStatus == status;
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: FilterChip(
+                                  label: Text(status),
+                                  selected: isSelected,
+                                  onSelected: (selected) =>
+                                      setState(() => _filterStatus = status),
+                                  backgroundColor: AppTheme.bg,
+                                  selectedColor: AppTheme.neon.withOpacity(0.3),
+                                  labelStyle: TextStyle(
+                                    color:
+                                        isSelected ? AppTheme.neon : Colors.white,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }),
-                        ],
+                              );
+                            }),
+                          ],
+                        ),
                       ),
                     ],
                   ),
