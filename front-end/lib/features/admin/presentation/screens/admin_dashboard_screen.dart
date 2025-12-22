@@ -157,7 +157,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 crossAxisCount: crossAxisCount,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
-                childAspectRatio: isMobile ? 1.3 : 1.5,
+                childAspectRatio: isMobile ? 1.1 : 1.3,
                 children: [
                   AdminKPICard(
                     title: 'Total Patients',
