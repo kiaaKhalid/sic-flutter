@@ -12,7 +12,9 @@ import com.sacmp.healthcare.dto.AddPatientRequest;
 import com.sacmp.healthcare.dto.DashboardResponse;
 import com.sacmp.healthcare.dto.PatientDetailResponse;
 import com.sacmp.healthcare.entity.HealthcareWorker;
+import com.sacmp.healthcare.entity.PatientAssignment;
 import com.sacmp.healthcare.repository.HealthcareWorkerRepository;
+import com.sacmp.healthcare.repository.PatientAssignmentRepository;
 import com.sacmp.health.entity.HeartRateData;
 import com.sacmp.health.entity.MoodData;
 import com.sacmp.health.entity.SleepData;
@@ -24,7 +26,10 @@ import com.sacmp.patient.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +51,65 @@ public class HealthcareWorkerService {
     private final SleepDataRepository sleepDataRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final HealthcareWorkerRepository healthcareWorkerRepository;
+    private final PatientAssignmentRepository patientAssignmentRepository;
+
+    /**
+     * Récupérer les patients assignés au healthcare worker connecté
+     */
+    @Transactional(readOnly = true)
+    public Page<PatientDetailResponse> getMyAssignedPatients(Pageable pageable) {
+        UUID healthcareWorkerId = getCurrentHealthcareWorkerId();
+        
+        Page<PatientAssignment> assignments = patientAssignmentRepository
+                .findActiveByHealthcareWorkerId(healthcareWorkerId, pageable);
+        
+        List<PatientDetailResponse> patients = assignments.getContent().stream()
+                .map(assignment -> buildPatientDetailResponse(assignment.getPatient()))
+                .collect(Collectors.toList());
+        
+        return new PageImpl<>(patients, pageable, assignments.getTotalElements());
+    }
+
+    /**
+     * Récupérer les patients assignés à un healthcare worker spécifique (par ID)
+     */
+    @Transactional(readOnly = true)
+    public Page<PatientDetailResponse> getAssignedPatientsByHealthcareWorkerId(UUID healthcareWorkerId, Pageable pageable) {
+        Page<PatientAssignment> assignments = patientAssignmentRepository
+                .findActiveByHealthcareWorkerId(healthcareWorkerId, pageable);
+        
+        List<PatientDetailResponse> patients = assignments.getContent().stream()
+                .map(assignment -> buildPatientDetailResponse(assignment.getPatient()))
+                .collect(Collectors.toList());
+        
+        return new PageImpl<>(patients, pageable, assignments.getTotalElements());
+    }
+
+    /**
+     * Compter le nombre de patients assignés au healthcare worker connecté
+     */
+    @Transactional(readOnly = true)
+    public long countMyAssignedPatients() {
+        UUID healthcareWorkerId = getCurrentHealthcareWorkerId();
+        return patientAssignmentRepository.countActivePatientsByHealthcareWorkerId(healthcareWorkerId);
+    }
+
+    /**
+     * Récupérer l'ID du healthcare worker connecté
+     */
+    private UUID getCurrentHealthcareWorkerId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.UserDetails) {
+            String email = ((org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal()).getUsername();
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+            HealthcareWorker healthcareWorker = healthcareWorkerRepository.findByUserId(user.getId())
+                    .orElseThrow(() -> new RuntimeException("Healthcare worker non trouvé pour cet utilisateur"));
+            return healthcareWorker.getId();
+        }
+        throw new RuntimeException("Utilisateur non authentifié");
+    }
 
     @Transactional(readOnly = true)
     public DashboardResponse getDashboard() {

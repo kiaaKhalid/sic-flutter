@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,11 +38,33 @@ public class HealthcareWorkerController {
     }
 
     /**
+     * Récupérer MES patients assignés (docteur connecté)
+     * GET /api/v1/healthcare-workers/my-patients
+     */
+    @GetMapping("/my-patients")
+    public ResponseEntity<Page<PatientDetailResponse>> getMyAssignedPatients(
+            @PageableDefault(size = 20) Pageable pageable) {
+        Page<PatientDetailResponse> patients = healthcareWorkerService.getMyAssignedPatients(pageable);
+        return ResponseEntity.ok(patients);
+    }
+
+    /**
+     * Compter mes patients assignés
+     * GET /api/v1/healthcare-workers/my-patients/count
+     */
+    @GetMapping("/my-patients/count")
+    public ResponseEntity<Long> countMyAssignedPatients() {
+        long count = healthcareWorkerService.countMyAssignedPatients();
+        return ResponseEntity.ok(count);
+    }
+
+    /**
      * Récupérer la liste des patients (paginée)
      * GET /api/v1/healthcare-workers/patients
      */
     @GetMapping("/patients")
-    public ResponseEntity<Page<PatientDetailResponse>> getAllPatients(Pageable pageable) {
+    public ResponseEntity<Page<PatientDetailResponse>> getAllPatients(
+            @PageableDefault(size = 20) Pageable pageable) {
         Page<PatientDetailResponse> patients = healthcareWorkerService.getAllPatients(pageable);
         return ResponseEntity.ok(patients);
     }

@@ -41,14 +41,17 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/v1/auth/**",
-                                "/v1/admin/**",
+                                "/auth/**",
                                 "/error",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/actuator/**"
+                                "/actuator/**",
+                                "/h2-console/**"
                         ).permitAll()
+                        .requestMatchers("/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/patient/**").hasAnyRole("PATIENT", "ADMIN")
+                        .requestMatchers("/doctor/**").hasAnyRole("MEDECIN", "ADMIN")
                         .requestMatchers("/v1/patients/**").hasAnyRole("PATIENT", "ADMIN")
                         .requestMatchers("/v1/healthcare-workers/**").hasAnyRole("HEALTHCARE_WORKER", "ADMIN")
                         .requestMatchers("/v1/health/**").hasAnyRole("HEALTHCARE_WORKER", "ADMIN", "PATIENT")

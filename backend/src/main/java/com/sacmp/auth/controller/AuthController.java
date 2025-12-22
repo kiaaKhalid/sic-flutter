@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Contrôleur pour l'authentification
- * Base URL: /api/v1/auth
+ * Base URL: /api/auth (avec context-path /api)
  */
 @RestController
-@RequestMapping("/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class AuthController {
@@ -22,7 +22,7 @@ public class AuthController {
 
     /**
      * Inscription d'un nouvel utilisateur
-     * POST /api/v1/auth/register
+     * POST /api/auth/register
      */
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
@@ -32,7 +32,7 @@ public class AuthController {
 
     /**
      * Connexion d'un utilisateur
-     * POST /api/v1/auth/login
+     * POST /api/auth/login
      */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
@@ -42,7 +42,7 @@ public class AuthController {
 
     /**
      * Envoyer un code de connexion par email
-     * POST /api/v1/auth/send-code
+     * POST /api/auth/send-code
      */
     @PostMapping("/send-code")
     public ResponseEntity<String> sendLoginCode(@Valid @RequestBody SendCodeRequest request) {
@@ -52,7 +52,7 @@ public class AuthController {
 
     /**
      * Vérifier un code de connexion
-     * POST /api/v1/auth/verify-code
+     * POST /api/auth/verify-code
      */
     @PostMapping("/verify-code")
     public ResponseEntity<AuthResponse> verifyCode(@Valid @RequestBody VerifyCodeRequest request) {
@@ -62,7 +62,7 @@ public class AuthController {
 
     /**
      * Authentification via Google
-     * POST /api/v1/auth/google
+     * POST /api/auth/google
      */
     @PostMapping("/google")
     public ResponseEntity<AuthResponse> googleAuth(@Valid @RequestBody GoogleAuthRequest request) {
@@ -72,7 +72,7 @@ public class AuthController {
 
     /**
      * Rafraîchir le token
-     * POST /api/v1/auth/refresh-token
+     * POST /api/auth/refresh-token
      */
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponse> refreshToken(@RequestHeader("Authorization") String token) {
@@ -82,7 +82,7 @@ public class AuthController {
 
     /**
      * Déconnexion
-     * POST /api/v1/auth/logout
+     * POST /api/auth/logout
      */
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
