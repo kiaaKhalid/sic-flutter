@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:travel_auth_ui/app/router/app_router.dart';
+import 'package:travel_auth_ui/features/auth/presentation/screens/login_screen.dart';
 import 'package:travel_auth_ui/features/admin/presentation/screens/admin_dashboard_screen.dart';
 import 'package:travel_auth_ui/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Configure URL strategy to use path-based routing instead of hash
+  usePathUrlStrategy();
+  
   ErrorWidget.builder = (FlutterErrorDetails details) {
     final exception = details.exceptionAsString();
     return Directionality(
@@ -34,22 +40,27 @@ class TravelAuthApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SAC-MP - Administrateur Système',
+      title: 'SAC-MP - Authentification',
       debugShowCheckedModeBanner: false,
+      showSemanticsDebugger: false,
       theme: AppTheme.dark().copyWith(
         // Applique Google Fonts Poppins au niveau du thème
         textTheme: GoogleFonts.poppinsTextTheme(AppTheme.dark().textTheme),
       ),
       // Configuration du Dialog theme pour assurer la visibilité des popups
       builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(1.0),
+        // Enable semantics for Selenium testing
+        return Semantics(
+          enabled: true,
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(1.0),
+            ),
+            child: child ?? const SizedBox.shrink(),
           ),
-          child: child ?? const SizedBox.shrink(),
         );
       },
-      home: const AdminDashboardScreen(),
+      initialRoute: AppRouter.login,
       onGenerateRoute: AppRouter.generateRoute,
     );
   }
