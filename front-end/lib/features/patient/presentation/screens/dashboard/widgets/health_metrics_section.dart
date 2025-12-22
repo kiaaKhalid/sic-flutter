@@ -46,7 +46,7 @@ class HealthMetricsSection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: isMobile ? 140 : 160,
+          height: isMobile ? 160 : 180,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: healthMetrics.length,
