@@ -5,12 +5,15 @@ import 'package:travel_auth_ui/features/patient/domain/models/alert.dart';
 import 'package:travel_auth_ui/features/patient/presentation/widgets/modern_nav_bar.dart';
 import 'package:travel_auth_ui/features/patient/presentation/widgets/health_metric_card.dart';
 import 'package:travel_auth_ui/features/patient/presentation/screens/health/mood_declaration_screen.dart';
+import 'package:travel_auth_ui/features/teleconsultation/presentation/widgets/communication_choice_dialog.dart';
 import 'package:travel_auth_ui/app/router/app_router.dart';
 
 // Widgets
 import 'widgets/profile_header.dart';
 import 'widgets/health_metrics_section.dart';
+import 'widgets/health_metrics_section.dart';
 import 'widgets/recent_alerts_section.dart';
+import 'widgets/patient_settings_section.dart';
 
 // Constantes
 import 'dashboard_constants.dart';
@@ -252,6 +255,18 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => const CommunicationChoiceDialog(),
+          );
+        },
+        backgroundColor: AppTheme.neon,
+        foregroundColor: Colors.black,
+        icon: const Icon(Icons.videocam),
+        label: const Text('Parler à mon docteur'),
+      ),
     );
   }
   
@@ -305,13 +320,7 @@ class _PatientDashboardScreenState extends State<PatientDashboardScreen> {
   }
   
   Widget _buildSettingsScreen() {
-    return const SingleChildScrollView(
-      padding: EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0, bottom: 16.0),
-      child: Text(
-        'Paramètres', 
-        style: TextStyle(color: Colors.white, fontSize: 24)
-      ),
-    );
+    return const PatientSettingsSection();
   }
 
   Widget _buildDrawerItem(int index, IconData icon, String title) {
