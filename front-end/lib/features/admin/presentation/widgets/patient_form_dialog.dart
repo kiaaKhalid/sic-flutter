@@ -22,7 +22,15 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
   late DateTime _dateOfBirth;
   late String _gender;
   late List<String> _monitoredParams;
+  late List<String> _assignedCaregivers;
   late bool _isActive;
+
+  final List<String> _availableCaregivers = const [
+    'Dr. Martin (Cardio)',
+    'Infirmière Dupuis',
+    'Dr. Leroy (Sommeil)',
+    'Soignant A. Bernard',
+  ];
 
   @override
   void initState() {
@@ -37,7 +45,8 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
     _dateOfBirth = patient?.dateOfBirth ??
         DateTime.now().subtract(const Duration(days: 365 * 30));
     _gender = patient?.gender ?? 'M';
-    _monitoredParams = patient?.monitoredParameters ?? [];
+    _monitoredParams = List.from(patient?.monitoredParameters ?? []);
+    _assignedCaregivers = List.from(patient?.assignedCaregivers ?? []);
     _isActive = patient?.isActive ?? true;
   }
 
@@ -66,7 +75,7 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
         isActive: _isActive,
         createdAt: widget.patient?.createdAt ?? DateTime.now(),
         monitoredParameters: _monitoredParams,
-        assignedCaregivers: widget.patient?.assignedCaregivers ?? [],
+        assignedCaregivers: _assignedCaregivers,
       );
       Navigator.pop(context, patient);
     }
@@ -223,6 +232,34 @@ class _PatientFormDialogState extends State<PatientFormDialog> {
                                     _monitoredParams.add(param);
                                   } else {
                                     _monitoredParams.remove(param);
+                                  }
+                                });
+                              },
+                              backgroundColor: AppTheme.bg,
+                              selectedColor:
+                                  AppTheme.neon.withValues(alpha: 0.3),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text('Soignants assignés:',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 14)),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          children: _availableCaregivers.map((caregiver) {
+                            final isSelected =
+                                _assignedCaregivers.contains(caregiver);
+                            return FilterChip(
+                              label: Text(caregiver),
+                              selected: isSelected,
+                              onSelected: (selected) {
+                                setState(() {
+                                  if (selected) {
+                                    _assignedCaregivers.add(caregiver);
+                                  } else {
+                                    _assignedCaregivers.remove(caregiver);
                                   }
                                 });
                               },
