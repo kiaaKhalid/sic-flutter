@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:travel_auth_ui/features/healthcare_worker/domain/models/patient.dart';
 import 'package:travel_auth_ui/features/healthcare_worker/domain/models/alert.dart';
 import 'package:travel_auth_ui/features/healthcare_worker/domain/models/health_data.dart' show HealthData, HealthDataDemo;
+import 'package:travel_auth_ui/theme/app_theme.dart';
+import 'package:travel_auth_ui/features/teleconsultation/presentation/widgets/patient_selection_dialog.dart';
 import '../../widgets/forms/add_patient_dialog.dart';
 import '../../widgets/delete_button.dart';
 
@@ -328,39 +330,106 @@ class _HealthcareDashboardScreenState extends State<HealthcareDashboardScreen> {
   }
 
   Widget _buildHealthMetrics(HealthData healthData) {
-    return const Card(
+    return Card(
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Métriques de santé',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
-            // À implémenter: Afficher les métriques de santé
-            Text('Métriques à venir...'),
+            const SizedBox(height: 16),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildMetricItem(Icons.favorite, Colors.red, 'Fréquence Cardiaque', '72 BPM'),
+                  const SizedBox(width: 16),
+                  _buildMetricItem(Icons.water_drop, Colors.blue, 'SpO2', '98 %'),
+                  const SizedBox(width: 16),
+                  _buildMetricItem(Icons.speed, Colors.orange, 'Pression Artérielle', '120/80'),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildMetricItem(IconData icon, Color color, String label, String value) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: color, size: 28),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+        ),
+      ],
+    );
+  }
+
   Widget _buildHealthCharts(HealthData healthData) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Activité récente',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 16),
-        // À implémenter: Graphiques d'activité
+        const SizedBox(height: 16),
         Card(
-          child: SizedBox(
-            height: 200,
-            child: Center(child: Text('Graphiques à venir...')),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                _buildActivityItem('Mesure prise', 'Il y a 10 min', Icons.monitor_heart, Colors.blue),
+                const Divider(),
+                _buildActivityItem('Alerte détectée', 'Il y a 1h', Icons.warning, Colors.orange),
+                const Divider(),
+                _buildActivityItem('Consultation terminée', 'Hier', Icons.check_circle, Colors.green),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActivityItem(String title, String time, IconData icon, Color color) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+              Text(time, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+            ],
           ),
         ),
       ],
@@ -456,6 +525,16 @@ class _HealthcareDashboardScreenState extends State<HealthcareDashboardScreen> {
       appBar: AppBar(
         title: const Text('Tableau de bord clinique'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.video_call, color: AppTheme.neon),
+            tooltip: 'Rejoindre la consultation',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => PatientSelectionDialog(patients: _patients),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
